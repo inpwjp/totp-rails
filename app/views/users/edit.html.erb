@@ -1,0 +1,8 @@
+<h1>Editing User</h1>
+
+<%= render 'form', user: @user %>
+
+<%= link_to 'set_totp', edit_totp_path(id: @user.id) %>
+
+<%= link_to 'Show', @user %> |
+<%= link_to 'Back', users_path %>

@@ -1,0 +1,19 @@
+<h1>Totp#edit</h1>
+
+<%= @qr %>
+
+<p>
+  <%= @now %>
+</p>
+
+<%= form_with(model: @otp, local: true, url: totp_index_path) do |form| %>
+  <div class="field">
+    <%= form.label :otp %>
+    <%= form.text_field :otp %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
