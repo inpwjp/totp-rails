@@ -1,12 +1,10 @@
-<h1>Totp#edit</h1>
+<h1>Totp#check</h1>
 
 <p>
-<%= flash[:warn] %>
+ <%= flash[:warn] %>
 </p>
 
-<%= @qr %>
-
-<%= form_with(model: @totp, local: true, url: totp_index_path(id: @user.id)) do |form| %>
+<%= form_with(model: @totp, local: true, url: check_totp_path(id: @user.id)) do |form| %>
   <%= form.hidden_field :secret_key %>
   <div class="field">
     <%= form.label :otp %>
@@ -14,7 +12,7 @@
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Check' %>
   </div>
 <% end %>
 

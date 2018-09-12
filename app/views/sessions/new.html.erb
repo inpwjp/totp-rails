@@ -1,2 +1,24 @@
-<h1>Sessions#new</h1>
-<p>Find me in app/views/sessions/new.html.erb</p>
+<h1>Login</h1>
+
+<p>
+  <%= flash[:warn] %>
+</p>
+
+<%= form_for @sessions, url: sessions_path, method: :post do |form| %>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :otp %>
+    <%= form.text_field :otp %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+
+<% end %> 

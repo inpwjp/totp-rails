@@ -1,9 +1,12 @@
 require 'test_helper'
 
 class TotpControllerTest < ActionDispatch::IntegrationTest
-  test "should get new" do
-    get totp_new_url
-    assert_response :success
+  setup do
+    @user = users(:user1)
   end
 
+  test "should get check" do
+    get check_totp_url, {params: {id: @user.id}}
+    assert_response :success
+  end
 end

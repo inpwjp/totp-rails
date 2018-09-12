@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(version: 2018_08_13_121435) do
 
   create_table "secrets", force: :cascade do |t|
     t.integer "user_id"
-    t.string "secrete_key"
+    t.string "secret_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_secrets_on_user_id"

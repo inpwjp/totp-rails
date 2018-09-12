@@ -1,0 +1,10 @@
+language: ruby
+rvm: 2.5.1
+install: bundle install
+cache:
+  directories: vendor/bundle
+branches: 
+only:
+  - master
+script: bundle exec rails test
+

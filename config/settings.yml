@@ -1,2 +1,2 @@
 common:
-  url: "http://sv1.yokoyama-you.net/"
+  service_name: "totp_rails"

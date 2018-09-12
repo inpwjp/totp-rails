@@ -5,15 +5,11 @@ class Secret < ApplicationRecord
     totp.verify(otp)
   end
 
-  def set_secret
-    self.secret = ROTP::Base32.random_base32
-  end
-
-  def otp
+  def totp_now
     totp.now
   end
 
   def totp 
-    ROTP::TOTP.new(self.secret)
+    ROTP::TOTP.new(self.secret_key)
   end
 end
