@@ -1,5 +1,7 @@
 language: ruby
 rvm: 2.5.1
+addons:
+  chrome: stable
 install: bundle install
 cache:
   directories: vendor/bundle
