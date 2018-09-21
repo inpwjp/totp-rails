@@ -2,25 +2,11 @@
 
 [![Build Status](https://travis-ci.org/inpwjp/totp-rails.svg?branch=master)](https://travis-ci.org/inpwjp/totp-rails)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+技術書典5 か65 アリンコの涙の出版物
 
-Things you may want to cover:
+「Ruby on RailsでのTOTP認証の実装 」
 
-* Ruby version
+にて紹介されています。TOTP認証を実装する記事のサンプルコードとなります。
 
-* System dependencies
+記事上のコードとはコメントの内容や、その後の実装追加などにより全く同じコードではないことをご了承ください。
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...

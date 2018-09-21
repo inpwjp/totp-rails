@@ -30,7 +30,7 @@ class TotpController < ApplicationController
     flash[:warn] = ""
     if params[:totp].present?
       @totp = Totp.new(params.require(:totp).permit(:otp))
-      if @user.secret.authorize(@totp.otp)
+      if @user.secret.try(:authorize, @totp.otp)
         flash[:warn] = "success"
       else
         flash[:warn] = "failure"
