@@ -17,8 +17,6 @@
         <td><%= user.name %></td>
         <td><%= user.user_id %></td>
         <td><%= link_to 'check_totp', check_totp_path(id: user.id) %> </td>
-        <td><%= link_to 'set_totp', edit_totp_path(id: user.id) %> </td>
-        <td><%= link_to 'delete_totp', totp_path(id: user.id), method: :delete %> </td>
         <td><%= link_to 'Show', user %></td>
         <td><%= link_to 'Edit', edit_user_path(user) %></td>
         <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>

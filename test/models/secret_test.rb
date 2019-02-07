@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: secrets
@@ -7,6 +9,7 @@
 #  secret_key :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  auth_type  :integer
 #
 
 require 'test_helper'

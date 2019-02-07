@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class TotpControllerTest < ActionDispatch::IntegrationTest
@@ -5,8 +7,8 @@ class TotpControllerTest < ActionDispatch::IntegrationTest
     @user = users(:user1)
   end
 
-  test "should get check" do
-    get check_totp_url, {params: {id: @user.id}}
+  test 'should get check' do
+    get check_totp_url, params: { id: @user.id }
     assert_response :success
   end
 end

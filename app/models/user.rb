@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -10,5 +12,5 @@
 #
 
 class User < ApplicationRecord
-  has_one :secret
+  has_many :secrets
 end

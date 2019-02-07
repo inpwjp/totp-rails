@@ -42,6 +42,10 @@ group :development, :test do
   gem 'test-unit-rails'
   gem 'test-unit'
   gem 'annotate'
+  gem 'guard'
+  gem 'rubocop'
+  gem 'guard-rubocop'
+  gem 'guard-test'
 end
 
 group :development do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,22 +12,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_13_121435) do
-
-  create_table "secrets", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "secret_key"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_secrets_on_user_id"
+ActiveRecord::Schema.define(version: 20_190_207_045_557) do
+  create_table 'secrets', force: :cascade do |t|
+    t.integer 'user_id'
+    t.string 'secret_key'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.integer 'auth_type'
+    t.index ['user_id'], name: 'index_secrets_on_user_id'
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_users_on_user_id", unique: true
+  create_table 'users', force: :cascade do |t|
+    t.string 'name'
+    t.string 'user_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_users_on_user_id', unique: true
   end
-
 end

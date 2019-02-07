@@ -10,5 +10,18 @@
   <%= @user.user_id %>
 </p>
 
+<% @user.secrets.each do |secret| %>
+  <p>
+    type: <%= secret.auth_type %> |<%= link_to 'delete_totp', totp_path(id: @user.id, secret_id: secret.id), method: :delete %>
+  </p>
+<% end %>
+  
+
+<p> 
+<%= link_to 'set_totp', edit_totp_path(id: @user.id) %> 
+</p>
+
+<p>
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
+</p>

@@ -1,2 +1,5 @@
 common:
   service_name: "totp_rails"
+  auth_type:
+    - totp
+    - u2f
