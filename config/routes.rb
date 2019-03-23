@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'app_id/app_id'
   resources 'totp', only: %i[edit create destroy]
   resources :sessions, only: %i[new create destroy]
   resources :users
