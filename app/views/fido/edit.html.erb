@@ -1,0 +1,31 @@
+<h2>
+  Fido認証登録
+</h2>
+<p>
+  ユーザ名: <%= @user.name %>
+</p>
+
+<form action="/fido" method="post">
+	<input type="hidden" name="respose">
+</form>
+
+<script>
+  var appId = <%= @app_id.to_json.html_safe %>
+  var registerRequests = <%= @registration_requests.to_json.html_safe %>;
+  var signRequests = <%= @sign_requests.as_json.to_json.html_safe %>;
+
+  u2f.register(appId, registerRequests, signRequests, function(registerResponse) {
+    var form, reg;
+
+    if (registerResponse.errorCode) {
+      return alert("Registration error: " + registerResponse.errorCode);
+    }
+
+    form = document.forms[0];
+    response = document.querySelector('[name=response]');
+
+    response.value = JSON.stringify(registerResponse);
+
+    form.submit();
+  });
+</script>

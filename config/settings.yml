@@ -3,3 +3,5 @@ common:
   auth_type:
     - totp
     - u2f
+  my_domains: 
+    - mydomain.example

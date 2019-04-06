@@ -1,20 +1,23 @@
 # frozen_string_literal: true
 
 class FidoController < ApplicationController
-  def new
+  def edit
     # Generate one for each version of U2F, currently only `U2F_V2`
+    @user = User.find(params[:id])
     @registration_requests = u2f.registration_requests
 
     # Store challenges. We need them for the verification step
     session[:challenges] = @registration_requests.map(&:challenge)
 
     # Fetch existing Registrations from your db and generate SignRequests
-    key_handles = Registration.map(&:key_handle)
+    key_handles = Secret.where(auth_type: "u2f", user: @user).all.map{|secret| secret.secret_key}
+    
+
     @sign_requests = u2f.authentication_requests(key_handles)
 
     @app_id = u2f.app_id
 
-    render 'registrations/new'
+    render 'fido/edit'
   end
 
   def create
@@ -56,5 +59,9 @@ class FidoController < ApplicationController
     user = User.find(params[:id])
     user.secret.try(:delete)
     redirect_to user_path(id: user.id)
+  end
+  
+  def u2f
+    @u2f ||= U2F::U2F.new(request.base_url)
   end
 end

@@ -1,5 +1,7 @@
 {
   "name": "totp-rails",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "u2f-api": "^1.0.10"
+  }
 }

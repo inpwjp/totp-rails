@@ -78,3 +78,4 @@ gem 'rqrcode_png'
 
 # Fido U2F
 gem 'u2f'
+
