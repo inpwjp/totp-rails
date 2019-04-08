@@ -6,7 +6,7 @@
 </p>
 
 <p id=waiting>
-  Waiting...
+Waiting...
 </p>
 
 <p id=error style="display: none">
@@ -14,11 +14,11 @@
 </p>
 
 <%= form_tag(fido_index_path, method: "post") do %>
-	<%= hidden_field_tag :response %>
+  <%= hidden_field_tag :response %>
 <% end %>
 
 <script>
-  var appId = <%= @app_id.to_json.html_safe %>
+var appId = <%= @app_id.to_json.html_safe %>
   var registerRequests = <%= @registration_requests.to_json.html_safe %>;
   var signRequests = <%= @sign_requests.as_json.to_json.html_safe %>;
 
@@ -37,20 +37,20 @@ var setError = function(code) {
   $error.innerHTML = errorMap[code];
 };
 
-  u2f.register(appId, registerRequests, signRequests, function(registerResponse) {
-    var form, reg;
+u2f.register(appId, registerRequests, signRequests, function(registerResponse) {
+  var form, reg;
 
-    if (registerResponse.errorCode) {
-      return setError(registerResponse.errorCode);
-    }
-    console.log(JSON.stringify(registerResponse))
+  if (registerResponse.errorCode) {
+    return setError(registerResponse.errorCode);
+  }
+  console.log(JSON.stringify(registerResponse))
 
     form = document.forms[0];
-    response = document.querySelector('[name=response]');
+  response = document.querySelector('[name=response]');
 
-    response.value = JSON.stringify(registerResponse);
+  response.value = JSON.stringify(registerResponse);
 
-    form.submit();
-  }, 15);
+  form.submit();
+}, 15);
 
 </script>

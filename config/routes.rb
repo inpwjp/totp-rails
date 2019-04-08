@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :sessions, only: %i[new create destroy]
   resources :users
   match 'totp/check', to: 'totp#check', via: %i[get post], as: 'check_totp'
-  match 'fido/check', to: 'fido#check', via: %i[get post], as: 'check_fido'
+  match 'fido/check/:id', to: 'fido#check', via: %i[get post], as: 'check_fido'
 
   root to: 'users#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

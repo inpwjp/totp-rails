@@ -41,34 +41,41 @@ class FidoController < ApplicationController
       session.delete(:user_id)
     end
     redirect_to user_path(user_id)
-    
   end
 
   def check
-  if params[:response].present?
-    response = U2F::SignResponse.load_from_json(params[:response])
-    user = User.where(id: params[:id]).first
+    @user = User.where(id: params[:id]).first
 
-    registration = Session.first(user: user, key_handle: response.key_handle)
-    return 'Need to register first' unless registration
+    @app_id = u2f.app_id
+    key_handles = Secret.where(
+      user: @user,
+      auth_type: "fido_u2f"
+    ).all.map{|secret| secret.key_handle}.compact
 
-    begin
-      u2f.authenticate!(session[:u2f_challenge], response,
-                        Base64.decode64(registration.public_key),
-                        registration.counter)
-    rescue U2F::Error => e
-      @error_message = "Unable to authenticate: #{e.class.name}"
-    ensure
-      session.delete(:u2f_challenge)
-    end
+    @sign_requests = u2f.authentication_requests(key_handles)
+    @challenge = u2f.challenge
+    if params[:response].present?
+      response = U2F::SignResponse.load_from_json(params[:response])
 
-    registration.update(counter: response.counter)
-  end 
-  @app_id = u2f.app_id
-  @sign_requests = u2f.authentication_requests(key_handles)
-  @challenge = u2f.challenge
-  session[:u2f_challenge] = @challenge
+      begin
+        registration = Secret.where(
+          user: @user,
+          key_handle: response.key_handle
+        ).first 
 
+        u2f.authenticate!(session[:u2f_challenge], response,
+                          Base64.decode64(registration.public_key),
+                          registration.counter)
+        flash[:warn] = "success"
+      rescue U2F::Error => e
+        @error_message = "Unable to authenticate: #{e.class.name}"
+        flash[:warn] = "failure"
+      ensure
+        session.delete(:u2f_challenge)
+      end
+      registration.update(counter: response.counter)
+    end 
+    session[:u2f_challenge] = @challenge
   end
 
   # ライブラリの初期化
