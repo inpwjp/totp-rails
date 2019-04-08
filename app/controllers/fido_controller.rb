@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
 class FidoController < ApplicationController
+
+  # 登録用メソッド
   def edit
-    # Generate one for each version of U2F, currently only `U2F_V2`
     @user = User.find(params[:id])
     @registration_requests = u2f.registration_requests
 
-    # Store challenges. We need them for the verification step
     session[:challenges] = @registration_requests.map(&:challenge)
-
-    # Fetch existing Registrations from your db and generate SignRequests
-    key_handles = Secret.where(auth_type: "u2f", user: @user).all.map{|secret| secret.secret_key}
-    
+    session[:user_id] = @user.id
+    key_handles = Secret.where(
+      user: @user,
+      auth_type: "fido_u2f"
+    ).all.map{|secret| secret.key_handle}.compact
 
     @sign_requests = u2f.authentication_requests(key_handles)
 
@@ -21,46 +22,56 @@ class FidoController < ApplicationController
   end
 
   def create
-    @totp = Totp.new(params.require(:totp).permit(:otp, :secret_key))
-    user = User.find(params[:id])
-    if user.secret.nil?
-      user.secret = Secret.new
+    response = U2F::RegisterResponse.load_from_json(params[:response])
+    user_id = session[:user_id]
+    begin
+      reg = u2f.register!(session[:challenges], response)
+      Secret.create!(
+        user_id: user_id,
+        auth_type: "fido_u2f",
+        certificate: reg.certificate,
+        key_handle: reg.key_handle,
+        public_key: reg.public_key,
+        counter: reg.counter
+      )
+    rescue U2F::Error => e
+      @error_message = "Unable to register: #{e.class.name}"
+    ensure
+      session.delete(:challenges)
+      session.delete(:user_id)
     end
-    user.secret.secret_key = @totp.secret_key
-    if user.secret.authorize(@totp.otp)
-      user.secret.save
-      redirect_to user_path(id: user.id)
-    else
-      flash[:warn] = 'failure'
-      @totp.otp = nil
-      @user = User.find(params[:id])
-      @qr = RQRCode::QRCode.new(ROTP::TOTP.new(@totp.secret_key).provisioning_uri([@user.user_id, '@', Settings.common.url].join), size: 8, level: :h).as_svg(module_size: 3).html_safe
-      render :edit
-    end
+    redirect_to user_path(user_id)
+    
   end
 
   def check
-    @user = User.find(params[:id])
-    flash[:warn] = ''
-    if params[:totp].present?
-      @totp = Totp.new(params.require(:totp).permit(:otp))
-      flash[:warn] = if @user.secret.try(:authorize, @totp.otp)
-                       'success'
-                     else
-                       'failure'
-                     end
-    else
-      @totp = Totp.new
+  if params[:response].present?
+    response = U2F::SignResponse.load_from_json(params[:response])
+    user = User.where(id: params[:id]).first
+
+    registration = Session.first(user: user, key_handle: response.key_handle)
+    return 'Need to register first' unless registration
+
+    begin
+      u2f.authenticate!(session[:u2f_challenge], response,
+                        Base64.decode64(registration.public_key),
+                        registration.counter)
+    rescue U2F::Error => e
+      @error_message = "Unable to authenticate: #{e.class.name}"
+    ensure
+      session.delete(:u2f_challenge)
     end
-    render :check
+
+    registration.update(counter: response.counter)
+  end 
+  @app_id = u2f.app_id
+  @sign_requests = u2f.authentication_requests(key_handles)
+  @challenge = u2f.challenge
+  session[:u2f_challenge] = @challenge
+
   end
 
-  def destroy
-    user = User.find(params[:id])
-    user.secret.try(:delete)
-    redirect_to user_path(id: user.id)
-  end
-  
+  # ライブラリの初期化
   def u2f
     @u2f ||= U2F::U2F.new(request.base_url)
   end

@@ -2,6 +2,10 @@
   "name": "totp-rails",
   "private": true,
   "dependencies": {
+    "@rails/webpacker": "^4.0.2",
     "u2f-api": "^1.0.10"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.2.1"
   }
 }

@@ -6,7 +6,6 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>User</th>
       <th colspan="5"></th>
     </tr>
   </thead>
@@ -15,7 +14,6 @@
     <% @users.each do |user| %>
       <tr>
         <td><%= user.name %></td>
-        <td><%= user.user_id %></td>
         <td><%= link_to 'check_totp', check_totp_path(id: user.id) %> </td>
         <td><%= link_to 'Show', user %></td>
         <td><%= link_to 'Edit', edit_user_path(user) %></td>

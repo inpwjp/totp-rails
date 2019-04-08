@@ -13,5 +13,4 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
-//= require u2f-api/dist/lib/u2f-api.js
 //= require_tree .
