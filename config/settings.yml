@@ -2,6 +2,3 @@ common:
   service_name: "totp_rails"
   auth_type:
     - totp
-    - fido_u2f
-  my_domains: 
-    - mydomain.example

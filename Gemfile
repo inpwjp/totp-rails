@@ -75,6 +75,3 @@ gem 'config'
 gem 'rqrcode'
 gem 'rqrcode_png'
 
-
-# Fido U2F
-gem 'u2f'
