@@ -84,6 +84,8 @@ GEM
       deep_merge (~> 1.2.1)
       dry-validation (>= 0.12.2)
     crass (1.0.4)
+    ddtrace (0.25.0)
+      msgpack
     deep_merge (1.2.1)
     dry-configurable (0.8.1)
       concurrent-ruby (~> 1.0)
@@ -311,6 +313,7 @@ DEPENDENCIES
   chromedriver-helper
   coffee-rails (~> 4.2)
   config
+  ddtrace
   guard
   guard-rubocop
   guard-test
