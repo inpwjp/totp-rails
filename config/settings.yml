@@ -3,5 +3,13 @@ common:
   auth_type:
     - totp
     - fido_u2f
+    - sms
   my_domains: 
     - mydomain.example
+  twilio:
+    account_sid: <%= ENV["TWILIO_ACCOUNT_SID"] %>
+    auth_token: <%= ENV["TWILIO_AUTH_TOKEN"] %>
+    from_number: <%= ENV["TWILIO_FROM_NUMBER"] %>
+  sms:
+    otp_length: 6
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_07_031921) do
+ActiveRecord::Schema.define(version: 2019_08_28_145637) do
 
   create_table "secrets", force: :cascade do |t|
     t.integer "user_id"
@@ -22,6 +22,10 @@ ActiveRecord::Schema.define(version: 2019_04_07_031921) do
     t.string "key_handle"
     t.string "public_key"
     t.integer "counter"
+    t.string "mobile_number"
+    t.string "mobile_number_status"
+    t.string "sms_otp"
+    t.datetime "created_sms_otp_at"
     t.index ["user_id"], name: "index_secrets_on_user_id"
   end
 
