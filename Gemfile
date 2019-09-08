@@ -81,3 +81,6 @@ gem 'u2f'
 
 # twilio 
 gem 'twilio-ruby'
+
+# 電話番号をE.164に変換する
+gem 'phony_rails'

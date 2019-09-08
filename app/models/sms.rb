@@ -1,19 +1,15 @@
 class Sms
-  attr_accessor :from, :to, :body
+  include ActiveModel::Model
 
-  # Twilioクライアントを初期化する
-  def initialize
-    @client = Twilio::REST::Client.new(
-      Settings.common.twilio.account_sid,
-      Settings.common.twilio.auth_token
-    )
-    self.from = Settings.common.twilio.from_number
-    self.body = 'Hello world!'
-  end
+  attr_accessor :from, :to, :body, :sms_otp, :userid
 
   # メッセージを送るためのメソッド
   def send_message(to = self.to, from = self.from, body = self.body)
-    @client.messages.create(
+    return false if to.blank?
+
+    from ||= Settings.common.twilio.from_number
+    body ||= 'Hello world!'
+    get_client.messages.create(
       from: from,
       to: to,
       body: body
@@ -30,5 +26,32 @@ class Sms
     send_message(to, from, body)
 
     sms_otp
+  end
+
+  def convert_e164
+    self.to = e164
+  end
+
+  def e164
+    if /^0(\d+)([\s-]{0,1})(\d+)([\s-]{0,1}(\d+))/ =~ self.to
+      PhonyRails.normalize_number(
+        self.to,
+        Settings.common.sms.location
+      )
+    else
+      self.to
+    end
+  end
+
+  def plausible?
+    Phony.plausible?(e164)
+  end
+
+  private
+  def set_client
+    @client = Twilio::REST::Client.new(
+      Settings.common.twilio.account_sid,
+      Settings.common.twilio.auth_token
+    )
   end
 end

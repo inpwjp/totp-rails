@@ -12,4 +12,6 @@ common:
     from_number: <%= ENV["TWILIO_FROM_NUMBER"] %>
   sms:
     otp_length: 6
+    location: JP
+    expiration_minutes: 10
 

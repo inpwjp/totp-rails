@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2019_08_28_145637) do
     t.string "public_key"
     t.integer "counter"
     t.string "mobile_number"
-    t.string "mobile_number_status"
+    t.boolean "mobile_number_status", default: false, null: false
     t.string "sms_otp"
     t.datetime "created_sms_otp_at"
     t.index ["user_id"], name: "index_secrets_on_user_id"

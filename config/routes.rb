@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  get 'sms/edit'
-  get 'sms/create'
-  get 'sms/confirm'
-  get 'sms/check'
-  match 'app_id', to: 'app_id#app_id', via: %i[get], as: 'app_id'  
+  resources 'sms', only: %i[edit create]
+  post 'sms/confirm/:id', to: 'sms#confirm'
+  match 'sms/check/:id', to: 'sms#check', via: %i[get post], as: 'check_sms'
+  match 'app_id', to: 'app_id#app_id', via: %i[get], as: 'app_id'
   resources 'totp', only: %i[edit create destroy]
   resources 'fido', only: %i[edit create destroy]
   resources :sessions, only: %i[new create destroy]
