@@ -14,7 +14,7 @@
 #  public_key           :string
 #  counter              :integer
 #  mobile_number        :string
-#  mobile_number_status :string
+#  mobile_number_status :boolean          default(FALSE), not null
 #  sms_otp              :string
 #  created_sms_otp_at   :datetime
 #
