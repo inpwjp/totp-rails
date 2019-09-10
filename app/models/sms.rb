@@ -9,7 +9,8 @@ class Sms
 
     from ||= Settings.common.twilio.from_number
     body ||= 'Hello world!'
-    get_client.messages.create(
+    to = e164
+    client.messages.create(
       from: from,
       to: to,
       body: body
@@ -34,9 +35,9 @@ class Sms
 
   def e164
     if /^0(\d+)([\s-]{0,1})(\d+)([\s-]{0,1}(\d+))/ =~ self.to
-      PhonyRails.normalize_number(
-        self.to,
-        Settings.common.sms.location
+      self.to.phony_formatted(
+        format: :international, 
+        normalize: Settings.common.sms.location.to_sym
       )
     else
       self.to
@@ -48,8 +49,8 @@ class Sms
   end
 
   private
-  def set_client
-    @client = Twilio::REST::Client.new(
+  def client
+    Twilio::REST::Client.new(
       Settings.common.twilio.account_sid,
       Settings.common.twilio.auth_token
     )

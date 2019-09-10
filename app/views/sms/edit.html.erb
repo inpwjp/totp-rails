@@ -1,2 +1,18 @@
 <h1>Sms#edit</h1>
-<p>Find me in app/views/sms/edit.html.erb</p>
+
+<p>
+<%= flash[:warn] %>
+</p>
+
+<%= form_with(model: @sms, local: true, url: confirm_sms_path(id: @sms.userid)) do |form| %>
+  <div class="field">
+    <%= form.label :to, "電話番号" %>
+    <%= form.text_field :to %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', root_path %>

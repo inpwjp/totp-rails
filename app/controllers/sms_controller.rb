@@ -1,56 +1,61 @@
 class SmsController < ApplicationController
   def edit
-    @sms = Sms.new(userid: params[:id])
+    @sms = Sms.new(to: params.try(:sms).try(:to))
+    @sms.userid = params[:id]
   end
 
   def create
-    @sms = Sms.new(sms_params)
+    @sms = Sms.new(params.require(:sms).permit(:userid, :sms_otp))
     @user = User.find(@sms.userid)
-    if @user.secrets.select do |secret| 
-          if(secret.sms? &&
-              secret.created_sms_otp_at < Time.now &&
-              Time.now < (
-                secret.created_sms_otp_at +
-                Settings.common.sms.expiration_minutes.minutes
-              ) &&
-              secret.try(:authorize, @sms.sms_otp)
-            )
-          end
-        end.compact.present?
+    secret = @user.secrets.where(auth_type: :sms).first
+    logger.info secret.authorize(@sms.sms_otp)
+    if secret.try(:authorize, @sms.sms_otp)
+      secret.mobile_number_status = true
+      secret.save
       flash[:warn] = 'success'
-      redirect to: show_users_path(id: @sms.userid)
+      redirect_to user_path(id: @sms.userid)
     else
+      secret.delete
       flash[:warn] = 'failure'
-      redirect to: edit_sms_path(id: @sms.userid)
+      redirect_to edit_sms_path(id: @sms.userid)
     end
   end
 
   def confirm
-    @sms_form = SmsForm.new(sms_form_params)
+    @sms = Sms.new(params.require(:sms).permit(:to, :sms_otp, :userid))
+    @user = User.find(params[:id])
+    @user.secrets.where(auth_type: :sms).delete_all
+
+    secret = Secret.new
+    @user.secrets << secret.set_sms_otp(@sms)
+    logger.info @user.secrets.to_json
   end
 
   def check
     @user = User.find(params[:id])
     if params[:sms].present?
-      @sms = Sms.new(sms_params)
-      flash[:warn] =
-        if @user.secrets.select do |secret| 
-              if(secret.sms? &&
-                  secret.created_sms_otp_at < Time.now &&
-                  Time.now < (
-                    secret.created_sms_otp_at +
-                    Settings.common.sms.expiration_minutes.minutes
-                  ) &&
-                  secret.try(:authorize, @sms.sms_otp)
-                )
-              end
-            end.compact.present?
-          'success'
-        else
-          'failure'
-        end
+      @sms = Sms.new(params.require(:sms).permit(:sms_otp, :userid))
+      if @user.secrets
+        .where(auth_type: :sms)
+        .first.try(:authorize, @sms.sms_otp)
+        flash[:warn] = 'success'
+      else
+        flash[:warn] = 'failure'
+      end
+    end
+    secret = @user.secrets.where(
+      auth_type: :sms,
+      mobile_number_status: true).first
+    if secret.blank?
+      flash[:warn] = 'error'
+      @sms = Sms.new
+      @user = User.find(params[:id])
     else
-      @sms_form = sms.new
+      @sms = Sms.new(to: secret.mobile_number)
+      secret = @user.secrets.where(auth_type: :sms).first
+      secret.sms_otp = @sms.send_otp
+      secret.created_sms_otp_at = Time.now
+      secret.save
     end
   end
 end

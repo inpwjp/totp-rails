@@ -1,2 +1,18 @@
 <h1>Sms#confirm</h1>
-<p>Find me in app/views/sms/confirm.html.erb</p>
+<p>
+<%= flash[:warn] %>
+</p>
+
+<%= form_with(model: @sms, local: true, url: sms_index_path()) do |form| %>
+  <%= form.hidden_field :userid, value: @user.id %>
+  <div class="field">
+    <%= form.label :sms_otp, "認証番号" %>
+    <%= form.text_field :sms_otp %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', root_path %>

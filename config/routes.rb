@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   resources 'sms', only: %i[edit create]
-  post 'sms/confirm/:id', to: 'sms#confirm'
+  post 'sms/confirm/:id', to: 'sms#confirm', as: 'confirm_sms'
   match 'sms/check/:id', to: 'sms#check', via: %i[get post], as: 'check_sms'
   match 'app_id', to: 'app_id#app_id', via: %i[get], as: 'app_id'
   resources 'totp', only: %i[edit create destroy]
